@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,13 @@ namespace PeliculasAPi
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            //agrego para configurar automaper
+            services.AddAutoMapper(typeof(StartUp));
+
+            //agrego para configurar la conexion a las base de datos
+            services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("defaultConnection")));
 
             services.AddControllers();
           
