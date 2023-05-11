@@ -99,7 +99,7 @@ namespace PeliculasAPi.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest($"Erro al modificar genero" + ex.Message);
+                return BadRequest($"Erro al modificar genero: " + ex.Message);
             }
 
         }
