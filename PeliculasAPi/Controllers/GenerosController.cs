@@ -10,12 +10,13 @@ namespace PeliculasAPi.Controllers
 {
     [ApiController]
     [Route("api/generos")]
-    public class GenerosController : ControllerBase
+    public class GenerosController : GenericoController
     {
+       
         private readonly ApplicationDBContext context;
         private readonly IMapper mapper;
 
-        public GenerosController(ApplicationDBContext context, IMapper mapper)
+        public GenerosController(ApplicationDBContext context, IMapper mapper):base(context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -23,11 +24,13 @@ namespace PeliculasAPi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<GeneroDTO>>> Get()
         {
-            var listaGeneros = await context.Generos.ToListAsync();
+            //var listaGeneros = await context.Generos.ToListAsync();
 
-            var listaGenerosDTO = mapper.Map<List<GeneroDTO>>(listaGeneros);
+            //var listaGenerosDTO = mapper.Map<List<GeneroDTO>>(listaGeneros);
 
-            return (listaGenerosDTO);
+            //return (listaGenerosDTO);
+
+            return await Get<Genero, GeneroDTO>();
 
         }
 
@@ -35,16 +38,18 @@ namespace PeliculasAPi.Controllers
 
         public async Task<ActionResult<GeneroDTO>> Get(int id)
         {
-            var entidadGenero = await context.Generos.FirstOrDefaultAsync(g => g.Id == id);
+            //var entidadGenero = await context.Generos.FirstOrDefaultAsync(g => g.Id == id);
 
-            if (entidadGenero == null)
-            {
-                return NotFound("El genero que busca no existe");
-            }
+            //if (entidadGenero == null)
+            //{
+            //    return NotFound("El genero que busca no existe");
+            //}
 
-            var genetoDTO = mapper.Map<GeneroDTO>(entidadGenero);
+            //var genetoDTO = mapper.Map<GeneroDTO>(entidadGenero);
 
-            return (genetoDTO);
+            //return (genetoDTO);
+
+            return await Get<Genero, GeneroDTO>(id);
         }
 
         [HttpPost]
@@ -60,16 +65,17 @@ namespace PeliculasAPi.Controllers
                 return BadRequest($"Ya existe un genero con el mismo nombre: {generoCreacionDTO.Nombre}");
             }
 
-            var entidadNueva = mapper.Map<Genero>(generoCreacionDTO);
+            //var entidadNueva = mapper.Map<Genero>(generoCreacionDTO);
 
-            context.Add(entidadNueva);
+            //context.Add(entidadNueva);
 
-            await context.SaveChangesAsync();
+            //await context.SaveChangesAsync();
 
-            var generoCreado = mapper.Map<GeneroDTO>(entidadNueva);
+            //var generoCreado = mapper.Map<GeneroDTO>(entidadNueva);
 
-            return new CreatedAtRouteResult("obtenerGenero", new { id = generoCreado.Id }, generoCreado);
+            //return new CreatedAtRouteResult("obtenerGenero", new { id = generoCreado.Id }, generoCreado);
 
+            return await Post<GeneroCreacionDTO,Genero, GeneroDTO>(generoCreacionDTO, "obtenerGenero");
         }
 
         [HttpPut("{id}")]
@@ -84,23 +90,25 @@ namespace PeliculasAPi.Controllers
                 return NotFound($"No existe el genero que quiere modificar, nombre: {generoModificado.Nombre}");
             }
 
-            var entidadModificada = mapper.Map<Genero>(generoModificado);
+            //var entidadModificada = mapper.Map<Genero>(generoModificado);
 
-            entidadModificada.Id = id;
+            //entidadModificada.Id = id;
 
-            context.Entry(entidadModificada).State = EntityState.Modified;
+            //context.Entry(entidadModificada).State = EntityState.Modified;
 
-            try
-            {
-                await context.SaveChangesAsync();
+            //try
+            //{
+            //    await context.SaveChangesAsync();
 
-                return Ok("El genero fue modificado con exito");
-            }
-            catch (Exception ex)
-            {
+            //    return Ok("El genero fue modificado con exito");
+            //}
+            //catch (Exception ex)
+            //{
 
-                return BadRequest($"Erro al modificar genero: " + ex.Message);
-            }
+            //    return BadRequest($"Erro al modificar genero: " + ex.Message);
+            //}
+
+            return await Put<GeneroCreacionDTO, Genero>(generoModificado, id);
 
         }
 
@@ -114,14 +122,14 @@ namespace PeliculasAPi.Controllers
                 return NotFound($"No existe el genero que quiere eliminar, id: {id}");
             }
 
-            context.Remove(new Genero() { Id=id});
+            //context.Remove(new Genero() { Id=id});
 
-            await context.SaveChangesAsync();
+            //await context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+
+            return await Delete<Genero>(id);
         }
-
-
 
     }
 }

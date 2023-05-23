@@ -12,14 +12,15 @@ namespace PeliculasAPi.Controllers
 {
     [ApiController]
     [Route("api/actores")]
-    public class ActoresController: ControllerBase
+    public class ActoresController: GenericoController
     {
         private readonly ApplicationDBContext context;
         private readonly IMapper mapper;
         private readonly IAlmacenadorArchivos almacenadorArchivos;
         private readonly string contenedor = "actores";
 
-        public ActoresController(ApplicationDBContext context,IMapper mapper, IAlmacenadorArchivos almacenadorArchivos)
+        public ActoresController(ApplicationDBContext context,IMapper mapper, IAlmacenadorArchivos almacenadorArchivos) 
+            : base(context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -28,16 +29,8 @@ namespace PeliculasAPi.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<ActorDTO>>> Get([FromQuery]PaginacionDTO paginacionDTO)
-        {
-            var queryable = context.Actores.AsQueryable();
-            await HttpContext.InsertarParametrosPaginacion(queryable, paginacionDTO.CantidadDeRegistrosPorPagina);
-
-            var listaActores = await queryable.Paginar(paginacionDTO).ToListAsync();
-
-            var listaActoresDTO = mapper.Map<List<ActorDTO>>(listaActores);
-
-            return (listaActoresDTO);
-
+        {        
+            return await Get<Actor, ActorDTO>(paginacionDTO);
         }
 
         [HttpGet("{id:int}", Name = "obtenerActor")]
@@ -49,11 +42,9 @@ namespace PeliculasAPi.Controllers
             if (entidadActor == null)
             {
                 return NotFound("El actor que busca no existe");
-            }
+            }       
 
-            var actorDTO = mapper.Map<ActorDTO>(entidadActor);
-
-            return (actorDTO);
+            return await Get<Actor, ActorDTO>(id);
         }
 
         [HttpPost]
@@ -158,34 +149,37 @@ namespace PeliculasAPi.Controllers
 
         public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<ActorPatchDTO> patchDocument )
         {
-            if (patchDocument == null)
-            {
-                return BadRequest();
-            }
+            //if (patchDocument == null)
+            //{
+            //    return BadRequest();
+            //}
 
-            var actorDb = await context.Actores.FirstOrDefaultAsync(x => x.Id == id);
+            //var actorDb = await context.Actores.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (actorDb == null)
-            {
-                return NotFound($"No existe el actor que quiere modificar, Id: {id}");
-            }
+            //if (actorDb == null)
+            //{
+            //    return NotFound($"No existe el actor que quiere modificar, Id: {id}");
+            //}
 
-            var actorDTO = mapper.Map<ActorPatchDTO>(actorDb);
+            //var actorDTO = mapper.Map<ActorPatchDTO>(actorDb);
 
-            patchDocument.ApplyTo(actorDTO,ModelState);
+            //patchDocument.ApplyTo(actorDTO,ModelState);
 
-            var esValido = TryValidateModel(actorDTO);
+            //var esValido = TryValidateModel(actorDTO);
 
-            if (!esValido)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!esValido)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-            mapper.Map(actorDTO, actorDb);
+            //mapper.Map(actorDTO, actorDb);
 
-            await context.SaveChangesAsync();
+            //await context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+
+            return await Patch<Actor, ActorPatchDTO>(id, patchDocument);
+
         }
 
         [HttpDelete("{id}")]
@@ -198,11 +192,7 @@ namespace PeliculasAPi.Controllers
                 return NotFound($"No existe el actor que quiere eliminar, id: {id}");
             }
 
-            context.Remove(new Actor() { Id = id });
-
-            await context.SaveChangesAsync();
-
-            return NoContent();
+            return await Delete<Actor>(id);
         }
     }
 }

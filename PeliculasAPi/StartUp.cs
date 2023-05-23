@@ -30,8 +30,9 @@ namespace PeliculasAPi
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("defaultConnection")));
 
-            services.AddControllers().AddNewtonsoftJson();
-          
+            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
+            //.AddNewtonsoftJson();
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }

@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PeliculasAPi.Utilidades;
+using System.ComponentModel.DataAnnotations;
 
 namespace PeliculasAPi.Entidades
 {
-    public class Actor
+    public class Actor:IId
     {
         public int Id { get; set; }
 
@@ -13,5 +14,7 @@ namespace PeliculasAPi.Entidades
         public DateTime FechaNacimiento { get; set; }
 
         public string Foto { get; set; }
+
+        public List<PeliculasActores> PeliculasActores { get; set; }
     }
 }
