@@ -35,7 +35,6 @@ namespace PeliculasAPi.Controllers
         }
 
         [HttpGet("{id:int}", Name = "obtenerGenero")]
-
         public async Task<ActionResult<GeneroDTO>> Get(int id)
         {
             //var entidadGenero = await context.Generos.FirstOrDefaultAsync(g => g.Id == id);
@@ -53,7 +52,6 @@ namespace PeliculasAPi.Controllers
         }
 
         [HttpPost]
-
         public async Task<ActionResult> Post([FromBody] GeneroCreacionDTO generoCreacionDTO)
         {
 
@@ -79,7 +77,6 @@ namespace PeliculasAPi.Controllers
         }
 
         [HttpPut("{id}")]
-
         public async Task<ActionResult> Put(int id, [FromBody] GeneroCreacionDTO generoModificado)
         {
             //vamos a validar que el genero a cerar no exista con el mismo nombre

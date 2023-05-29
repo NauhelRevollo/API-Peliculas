@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using PeliculasAPi.Servicios;
+using PeliculasAPi.Utilidades;
 using System.Text.Json.Serialization;
 
 namespace PeliculasAPi
@@ -26,9 +30,23 @@ namespace PeliculasAPi
 
             services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosAzure>();
 
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+
+            services.AddSingleton(provider =>
+            
+                new MapperConfiguration(config =>
+                {
+                    var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                    config.AddProfile(new AutoMapperProfiles(geometryFactory));
+                }).CreateMapper()
+
+
+             );
+
             //agrego para configurar la conexion a las base de datos
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("defaultConnection")));
+                Configuration.GetConnectionString("defaultConnection"),
+                sqlServerOptions => sqlServerOptions.UseNetTopologySuite()));
 
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
             //.AddNewtonsoftJson();
@@ -39,7 +57,7 @@ namespace PeliculasAPi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
+
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
