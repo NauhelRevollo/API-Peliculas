@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using NetTopologySuite.Geometries;
 using PeliculasAPi.DTOs;
 using PeliculasAPi.Entidades;
+using System.IO.MemoryMappedFiles;
 
 namespace PeliculasAPi.Utilidades
 {
@@ -45,7 +47,14 @@ namespace PeliculasAPi.Utilidades
                 ForMember(x => x.Generos, options => options.MapFrom(MapPeliculasGeneros)).
                 ForMember(x => x.Actores, options => options.MapFrom(MapPeliculasActores));
 
+            CreateMap<IdentityUser, UsuarioDTO>();
 
+            CreateMap<Review, ReviewDTO>()
+                .ForMember(x => x.NombreUsuario, options => options.MapFrom(y => y.Usuario.UserName));
+            CreateMap<ReviewDTO, Review>();
+            CreateMap<ReviewCreacionDTO, Review>();
+
+            CreateMap<IdentityUser, UsuarioDTO>();
 
 
         }

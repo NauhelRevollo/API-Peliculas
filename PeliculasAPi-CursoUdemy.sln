@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeliculasAPi", "PeliculasAPi\PeliculasAPi.csproj", "{022D43FC-CEFC-4443-818B-8410CAE0A58F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeliculasAPi", "PeliculasAPi\PeliculasAPi.csproj", "{022D43FC-CEFC-4443-818B-8410CAE0A58F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeliculasAP.ITest", "PeliculasAP.ITest\PeliculasAP.ITest.csproj", "{E4333E2E-7EF2-4D52-ACA8-1810131CCFBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{022D43FC-CEFC-4443-818B-8410CAE0A58F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{022D43FC-CEFC-4443-818B-8410CAE0A58F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{022D43FC-CEFC-4443-818B-8410CAE0A58F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4333E2E-7EF2-4D52-ACA8-1810131CCFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4333E2E-7EF2-4D52-ACA8-1810131CCFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4333E2E-7EF2-4D52-ACA8-1810131CCFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4333E2E-7EF2-4D52-ACA8-1810131CCFBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
