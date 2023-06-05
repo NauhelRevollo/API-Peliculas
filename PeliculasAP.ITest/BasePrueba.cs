@@ -11,6 +11,9 @@ using NetTopologySuite;
 using PeliculasAPi.Utilidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PeliculasAP.ITest
 {
@@ -39,54 +42,54 @@ namespace PeliculasAP.ITest
             return config.CreateMapper();
         }
 
-        //protected ControllerContext ConstruirControllerContext()
-        //{
-        //    var usuario = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-        //    {
-        //        new Claim(ClaimTypes.Name, usuarioPorDefectoEmail),
-        //        new Claim(ClaimTypes.Email, usuarioPorDefectoEmail),
-        //        new Claim(ClaimTypes.NameIdentifier, usuarioPorDefectoId)
-        //    }));
+        protected ControllerContext ConstruirControllerContext()
+        {
+            var usuario = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, usuarioPorDefectoEmail),
+                new Claim(ClaimTypes.Email, usuarioPorDefectoEmail),
+                new Claim(ClaimTypes.NameIdentifier, usuarioPorDefectoId)
+            }));
 
-        //    return new ControllerContext()
-        //    {
-        //        HttpContext = new DefaultHttpContext() { User = usuario }
-        //    };
-        //}
+            return new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = usuario }
+            };
+        }
 
-        //protected WebApplicationFactory<Startup> ConstruirWebApplicationFactory(string nombreBD,
-        //    bool ignorarSeguridad = true)
-        //{
-        //    var factory = new WebApplicationFactory<Startup>();
+        protected WebApplicationFactory<StartUp> ConstruirWebApplicationFactory(string nombreBD,
+            bool ignorarSeguridad = true)
+        {
+            var factory = new WebApplicationFactory<StartUp>();
 
-        //    factory = factory.WithWebHostBuilder(builder =>
-        //    {
-        //        builder.ConfigureTestServices(services =>
-        //        {
-        //            var descriptorDBContext = services.SingleOrDefault(d =>
-        //            d.ServiceType == typeof(DbContextOptions<ApplicationDBContext>));
+            factory = factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    var descriptorDBContext = services.SingleOrDefault(d =>
+                    d.ServiceType == typeof(DbContextOptions<ApplicationDBContext>));
 
-        //            if (descriptorDBContext != null)
-        //            {
-        //                services.Remove(descriptorDBContext);
-        //            }
+                    if (descriptorDBContext != null)
+                    {
+                        services.Remove(descriptorDBContext);
+                    }
 
-        //            services.AddDbContext<ApplicationDBContext>(options =>
-        //            options.UseInMemoryDatabase(nombreBD));
+                    services.AddDbContext<ApplicationDBContext>(options =>
+                    options.UseInMemoryDatabase(nombreBD));
 
-        //            if (ignorarSeguridad)
-        //            {
-        //                services.AddSingleton<IAuthorizationHandler, AllowAnonymousHandler>();
+                    if (ignorarSeguridad)
+                    {
+                        services.AddSingleton<IAuthorizationHandler,AllowAnonymousHandler>();
 
-        //                services.AddControllers(options =>
-        //                {
-        //                    options.Filters.Add(new UsuarioFalsoFiltro());
-        //                });
-        //            }
-        //        });
-        //    });
+                        services.AddControllers(options =>
+                        {
+                            options.Filters.Add(new UsuarioFalsoFiltro());
+                        });
+                    }
+                });
+            });
 
-        //    return factory;
-        //}
+            return factory;
+        }
     }
 }
